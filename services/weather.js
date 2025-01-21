@@ -1,7 +1,7 @@
 export class WeatherService {
   async getData(lat, lng) {
     // Using OpenWeatherMap API
-    const API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY';
+    const API_KEY = '2278e561bf836613c9573ef1232d44d6';
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY}&units=metric`
