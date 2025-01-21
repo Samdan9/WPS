@@ -1,0 +1,13 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+#locationInput {
+    margin-bottom: 20px;
+}
+
+#weatherData, #prediction {
+    margin-top: 20px;
+}
