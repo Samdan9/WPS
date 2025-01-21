@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wildfire Prediction System</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-</head>
-<body>
+  </head>
+  <body>
     <h1>Wildfire Prediction System</h1>
     <div id="locationInput">
-        <button onclick="getLocation()">Use Current Location</button>
-        <label for="location">or Enter your location:</label>
-        <input type="text" id="location" placeholder="City, Country">
-        <button onclick="getWeatherData()">Get Weather</button>
+      <button onclick="getLocation()">Use Current Location</button>
+      <label for="location">or Enter your location:</label>
+      <input type="text" id="location" placeholder="City, Country" />
+      <button onclick="getWeatherData()">Get Weather</button>
     </div>
     <div id="map"></div>
     <div id="weatherData"></div>
     <div id="prediction"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
