@@ -7,6 +7,7 @@ function getWeatherData() {
         .then(data => {
             displayWeatherData(data);
             predictWildfire(data);
+            showMap(data.coord.lat, data.coord.lon);
         })
         .catch(error => console.error('Error fetching weather data:', error));
 }
@@ -23,7 +24,6 @@ function displayWeatherData(data) {
 
 function predictWildfire(data) {
     const predictionDiv = document.getElementById('prediction');
-    // Simple logic for prediction (this should be replaced with a proper model or API)
     const temperature = data.main.temp - 273.15;
     const humidity = data.main.humidity;
     const windSpeed = data.wind.speed;
@@ -34,4 +34,33 @@ function predictWildfire(data) {
     }
 
     predictionDiv.innerHTML = `<h2>Wildfire Prediction</h2><p>${prediction}</p>`;
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeatherData(data);
+                    predictWildfire(data);
+                    showMap(lat, lon);
+                })
+                .catch(error => console.error('Error fetching weather data:', error));
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+
+function showMap(lat, lon) {
+    const map = L.map('map').setView([lat, lon], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    L.marker([lat, lon]).addTo(map)
+        .bindPopup('Weather data location')
+        .openPopup();
 }
