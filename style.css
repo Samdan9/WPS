@@ -8,6 +8,16 @@ body {
     margin-bottom: 20px;
 }
 
+#locationInput input {
+    margin: 0 10px;
+}
+
 #weatherData, #prediction {
+    margin-top: 20px;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
     margin-top: 20px;
 }
