@@ -1,4 +1,5 @@
 const apiKey = '2278e561bf836613c9573ef1232d44d6';
+let map; // Declare map variable at a higher scope
 
 function getWeatherData() {
     const location = document.getElementById('location').value;
@@ -7,7 +8,7 @@ function getWeatherData() {
         .then(data => {
             displayWeatherData(data);
             predictWildfire(data);
-            showMap(data.coord.lat, data.coord.lon);
+            updateMap(data.coord.lat, data.coord.lon); // Use updateMap function
         })
         .catch(error => console.error('Error fetching weather data:', error));
 }
@@ -52,7 +53,7 @@ function getLocation() {
                 .then(data => {
                     displayWeatherData(data);
                     predictWildfire(data);
-                    showMap(lat, lon);
+                    updateMap(lat, lon); // Use updateMap function
                 })
                 .catch(error => console.error('Error fetching weather data:', error));
         });
@@ -61,8 +62,8 @@ function getLocation() {
     }
 }
 
-function showMap(lat, lon) {
-    const map = L.map('map').setView([lat, lon], 13);
+function initializeMap(lat, lon) {
+    map = L.map('map').setView([lat, lon], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -70,3 +71,19 @@ function showMap(lat, lon) {
         .bindPopup('Weather data location')
         .openPopup();
 }
+
+function updateMap(lat, lon) {
+    if (!map) {
+        initializeMap(lat, lon); // Initialize map if it doesn't exist
+    } else {
+        map.setView([lat, lon], 13); // Update map view
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup('Weather data location')
+            .openPopup();
+    }
+}
+
+// Initialize map on page load with default location (optional)
+document.addEventListener('DOMContentLoaded', () => {
+    initializeMap(37.7749, -122.4194); // Example: San Francisco coordinates
+});
