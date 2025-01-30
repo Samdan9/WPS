@@ -59,23 +59,27 @@ function fetchAdditionalData(lat, lon) {
         console.log("NOAA API response:", response); // Debugging
         return response.json();
       })
+      .then((droughtData) => {
+        console.log("Drought data:", droughtData); // Debugging
+        const droughtIndex = droughtData.results?.[0]?.value || "N/A"; // Example: Get the drought index value
+        return droughtIndex;
+      })
       .catch((error) => {
         console.error("Error fetching drought data:", error);
-        return { results: [{ value: "N/A" }] }; // Return default value on error
+        return "N/A"; // Return default value on error
       }),
     fetch(wildfireUrl)
       .then((response) => response.json())
+      .then((wildfireHistoryData) => {
+        console.log("Wildfire history data:", wildfireHistoryData); // Debugging
+        const wildfireHistory = wildfireHistoryData.features?.length || "N/A"; // Example: Get the number of wildfires
+        return wildfireHistory;
+      })
       .catch((error) => {
         console.error("Error fetching wildfire history data:", error);
-        return { features: [] }; // Return default value on error
+        return "N/A"; // Return default value on error
       }),
-  ]).then(([droughtData, wildfireHistoryData]) => {
-    console.log("Drought data:", droughtData); // Debugging
-    console.log("Wildfire history data:", wildfireHistoryData); // Debugging
-
-    const droughtIndex = droughtData.results[0]?.value || "N/A"; // Example: Get the drought index value
-    const wildfireHistory = wildfireHistoryData.features?.length || "N/A"; // Example: Get the number of wildfires
-
+  ]).then(([droughtIndex, wildfireHistory]) => {
     return {
       droughtIndex: droughtIndex,
       wildfireHistory: wildfireHistory,
