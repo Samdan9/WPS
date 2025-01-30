@@ -10,14 +10,18 @@ function getWeatherData() {
   )
     .then((response) => response.json())
     .then((data) => {
+      console.log("Weather data:", data); // Debugging
       displayWeatherData(data);
-      fetchAdditionalData(data.coord.lat, data.coord.lon).then(
-        (additionalData) => {
+      fetchAdditionalData(data.coord.lat, data.coord.lon)
+        .then((additionalData) => {
+          console.log("Additional data:", additionalData); // Debugging
           displayAdditionalData(additionalData);
           predictWildfire(data, additionalData);
           updateMap(data.coord.lat, data.coord.lon); // Use updateMap function
-        }
-      );
+        })
+        .catch((error) =>
+          console.error("Error fetching additional data:", error)
+        );
     })
     .catch((error) => console.error("Error fetching weather data:", error));
 }
@@ -53,8 +57,11 @@ function fetchAdditionalData(lat, lon) {
     }).then((response) => response.json()),
     fetch(wildfireUrl).then((response) => response.json()),
   ]).then(([droughtData, wildfireHistoryData]) => {
-    const droughtIndex = droughtData.results[0].value; // Example: Get the drought index value
-    const wildfireHistory = wildfireHistoryData.features.length; // Example: Get the number of wildfires
+    console.log("Drought data:", droughtData); // Debugging
+    console.log("Wildfire history data:", wildfireHistoryData); // Debugging
+
+    const droughtIndex = droughtData.results[0]?.value || "N/A"; // Example: Get the drought index value
+    const wildfireHistory = wildfireHistoryData.features?.length || "N/A"; // Example: Get the number of wildfires
 
     return {
       droughtIndex: droughtIndex,
@@ -119,12 +126,18 @@ function getLocation() {
       )
         .then((response) => response.json())
         .then((data) => {
+          console.log("Weather data:", data); // Debugging
           displayWeatherData(data);
-          fetchAdditionalData(lat, lon).then((additionalData) => {
-            displayAdditionalData(additionalData);
-            predictWildfire(data, additionalData);
-            updateMap(lat, lon); // Use updateMap function
-          });
+          fetchAdditionalData(lat, lon)
+            .then((additionalData) => {
+              console.log("Additional data:", additionalData); // Debugging
+              displayAdditionalData(additionalData);
+              predictWildfire(data, additionalData);
+              updateMap(lat, lon); // Use updateMap function
+            })
+            .catch((error) =>
+              console.error("Error fetching additional data:", error)
+            );
         })
         .catch((error) => console.error("Error fetching weather data:", error));
     });
