@@ -1,4 +1,6 @@
 const apiKey = '2278e561bf836613c9573ef1232d44d6';
+const noaaToken = 'GrNHAeslHtkpzjGwpmsfoiHLkzhptbkY'; // Replace with your NOAA API token
+const wildfireApiKey = 'ccae21071b51fddc68f41bdba1bfd5e1'; // Replace with your NASA FIRMS API key
 let map; // Declare map variable at a higher scope
 
 function getWeatherData() {
@@ -7,8 +9,11 @@ function getWeatherData() {
         .then(response => response.json())
         .then(data => {
             displayWeatherData(data);
-            predictWildfire(data);
-            updateMap(data.coord.lat, data.coord.lon); // Use updateMap function
+            fetchAdditionalData(data.coord.lat, data.coord.lon)
+                .then(additionalData => {
+                    predictWildfire(data, additionalData);
+                    updateMap(data.coord.lat, data.coord.lon); // Use updateMap function
+                });
         })
         .catch(error => console.error('Error fetching weather data:', error));
 }
@@ -23,13 +28,35 @@ function displayWeatherData(data) {
     `;
 }
 
-function predictWildfire(data) {
+function fetchAdditionalData(lat, lon) {
+    const droughtUrl = `https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=DRI&locationid=FIPS:37&startdate=2022-01-01&enddate=2022-12-31&units=metric&limit=1`;
+    const wildfireUrl = `https://firms.modaps.eosdis.nasa.gov/api/viirs?lat=${lat}&lon=${lon}&api_key=${wildfireApiKey}`;
+
+    return Promise.all([
+        fetch(droughtUrl, {
+            headers: {
+                token: noaaToken
+            }
+        }).then(response => response.json()),
+        fetch(wildfireUrl).then(response => response.json())
+    ]).then(([droughtData, wildfireHistoryData]) => {
+        const droughtIndex = droughtData.results[0].value; // Example: Get the drought index value
+        const wildfireHistory = wildfireHistoryData.features.length; // Example: Get the number of wildfires
+
+        return {
+            droughtIndex: droughtIndex,
+            wildfireHistory: wildfireHistory
+        };
+    });
+}
+
+function predictWildfire(weatherData, additionalData) {
     const predictionDiv = document.getElementById('prediction');
-    const temperature = data.main.temp - 273.15;
-    const humidity = data.main.humidity;
-    const windSpeed = data.wind.speed;
-    const droughtIndex = parseInt(document.getElementById('droughtIndex').value);
-    const wildfireHistory = parseInt(document.getElementById('wildfireHistory').value);
+    const temperature = weatherData.main.temp - 273.15;
+    const humidity = weatherData.main.humidity;
+    const windSpeed = weatherData.wind.speed;
+    const droughtIndex = additionalData.droughtIndex;
+    const wildfireHistory = additionalData.wildfireHistory;
 
     let prediction = 'No risk of wildfire.';
     if (temperature > 35 && humidity < 20 && windSpeed > 10 && droughtIndex > 75 && wildfireHistory > 5) {
@@ -54,8 +81,11 @@ function getLocation() {
                 .then(response => response.json())
                 .then(data => {
                     displayWeatherData(data);
-                    predictWildfire(data);
-                    updateMap(lat, lon); // Use updateMap function
+                    fetchAdditionalData(lat, lon)
+                        .then(additionalData => {
+                            predictWildfire(data, additionalData);
+                            updateMap(lat, lon); // Use updateMap function
+                        });
                 })
                 .catch(error => console.error('Error fetching weather data:', error));
         });
