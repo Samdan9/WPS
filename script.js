@@ -46,7 +46,7 @@ function displayAdditionalData(data) {
 }
 
 function fetchAdditionalData(lat, lon) {
-  const droughtUrl = `https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=DRI&locationid=FIPS:37&startdate=2022-01-01&enddate=2022-12-31&units=metric&limit=1`;
+  const droughtUrl = `https://www.ncei.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=DRI&locationid=FIPS:37&startdate=2022-01-01&enddate=2022-12-31&units=metric&limit=1`;
   const wildfireUrl = `https://firms.modaps.eosdis.nasa.gov/api/viirs?lat=${lat}&lon=${lon}&api_key=${wildfireApiKey}`;
 
   return Promise.all([
