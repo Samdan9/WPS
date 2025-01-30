@@ -54,8 +54,21 @@ function fetchAdditionalData(lat, lon) {
       headers: {
         token: noaaToken,
       },
-    }).then((response) => response.json()),
-    fetch(wildfireUrl).then((response) => response.json()),
+    })
+      .then((response) => {
+        console.log("NOAA API response:", response); // Debugging
+        return response.json();
+      })
+      .catch((error) => {
+        console.error("Error fetching drought data:", error);
+        return { results: [{ value: "N/A" }] }; // Return default value on error
+      }),
+    fetch(wildfireUrl)
+      .then((response) => response.json())
+      .catch((error) => {
+        console.error("Error fetching wildfire history data:", error);
+        return { features: [] }; // Return default value on error
+      }),
   ]).then(([droughtData, wildfireHistoryData]) => {
     console.log("Drought data:", droughtData); // Debugging
     console.log("Wildfire history data:", wildfireHistoryData); // Debugging
