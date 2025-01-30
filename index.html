@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wildfire Prediction System</title>
-    <link rel="icon" type="image/x-icon" href="/WPS/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/WPS/images/favicon.ico" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   </head>
@@ -15,15 +15,10 @@
       <label for="location">or Enter your location:</label>
       <input type="text" id="location" placeholder="City, Country" />
       <button onclick="getWeatherData()">Get Weather</button>
-      <br>
-      <label for="droughtIndex">Drought Index:</label>
-      <input type="number" id="droughtIndex" placeholder="0-100" />
-      <br>
-      <label for="wildfireHistory">Wildfire History (number of wildfires in the past 5 years):</label>
-      <input type="number" id="wildfireHistory" placeholder="0" />
     </div>
     <div id="map"></div>
     <div id="weatherData"></div>
+    <div id="additionalData"></div>
     <div id="prediction"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="script.js"></script>
