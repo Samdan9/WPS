@@ -69,11 +69,18 @@ function fetchAdditionalData(lat, lon) {
         return "N/A"; // Return default value on error
       }),
     fetch(wildfireUrl)
-      .then((response) => response.json())
-      .then((wildfireHistoryData) => {
-        console.log("Wildfire history data:", wildfireHistoryData); // Debugging
-        const wildfireHistory = wildfireHistoryData.features?.length || "N/A"; // Example: Get the number of wildfires
-        return wildfireHistory;
+      .then((response) => response.text()) // Use text() to inspect the raw response
+      .then((text) => {
+        console.log("Wildfire history raw data:", text); // Debugging
+        try {
+          const wildfireHistoryData = JSON.parse(text);
+          console.log("Wildfire history data:", wildfireHistoryData); // Debugging
+          const wildfireHistory = wildfireHistoryData.features?.length || "N/A"; // Example: Get the number of wildfires
+          return wildfireHistory;
+        } catch (error) {
+          console.error("Error parsing wildfire history data:", error);
+          return "N/A"; // Return default value on error
+        }
       })
       .catch((error) => {
         console.error("Error fetching wildfire history data:", error);
