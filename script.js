@@ -28,15 +28,17 @@ function predictWildfire(data) {
     const temperature = data.main.temp - 273.15;
     const humidity = data.main.humidity;
     const windSpeed = data.wind.speed;
+    const droughtIndex = parseInt(document.getElementById('droughtIndex').value);
+    const wildfireHistory = parseInt(document.getElementById('wildfireHistory').value);
 
     let prediction = 'No risk of wildfire.';
-    if (temperature > 35 && humidity < 20 && windSpeed > 10) {
+    if (temperature > 35 && humidity < 20 && windSpeed > 10 && droughtIndex > 75 && wildfireHistory > 5) {
         prediction = 'Very high risk of wildfire.';
-    } else if (temperature > 30 && humidity < 25 && windSpeed > 7) {
+    } else if (temperature > 30 && humidity < 25 && windSpeed > 7 && droughtIndex > 50 && wildfireHistory > 3) {
         prediction = 'High risk of wildfire.';
-    } else if (temperature > 25 && humidity < 30 && windSpeed > 5) {
+    } else if (temperature > 25 && humidity < 30 && windSpeed > 5 && droughtIndex > 25 && wildfireHistory > 1) {
         prediction = 'Moderate risk of wildfire.';
-    } else if (temperature > 20 && humidity < 35 && windSpeed > 3) {
+    } else if (temperature > 20 && humidity < 35 && windSpeed > 3 && droughtIndex > 10 && wildfireHistory > 0) {
         prediction = 'Low risk of wildfire.';
     }
 
