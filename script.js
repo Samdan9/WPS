@@ -47,7 +47,7 @@ function displayAdditionalData(data) {
 
 function fetchAdditionalData(lat, lon) {
   const droughtUrl = `https://www.ncei.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=DRI&locationid=FIPS:37&startdate=2022-01-01&enddate=2022-12-31&units=metric&limit=1`;
-  const wildfireUrl = `https://firms.modaps.eosdis.nasa.gov/api/viirs?lat=${lat}&lon=${lon}&api_key=${wildfireApiKey}`;
+  const wildfireUrl = `https://firms.modaps.eosdis.nasa.gov/api/area/json/${wildfireApiKey}/VIIRS_NOAA20_NRT/${lat}/${lon}/7`;
 
   return Promise.all([
     fetch(droughtUrl, {
@@ -57,7 +57,10 @@ function fetchAdditionalData(lat, lon) {
     })
       .then((response) => {
         console.log("NOAA API response:", response); // Debugging
-        return response.json();
+        return response.text().then((text) => {
+          console.log("NOAA API response text:", text); // Log raw response
+          return JSON.parse(text); // Parse as JSON
+        });
       })
       .then((droughtData) => {
         console.log("Drought data:", droughtData); // Debugging
@@ -69,10 +72,16 @@ function fetchAdditionalData(lat, lon) {
         return "N/A"; // Return default value on error
       }),
     fetch(wildfireUrl)
-      .then((response) => response.json()) // Parse as JSON
+      .then((response) => {
+        console.log("Wildfire API response:", response); // Debugging
+        return response.text().then((text) => {
+          console.log("Wildfire API response text:", text); // Log raw response
+          return JSON.parse(text); // Parse as JSON
+        });
+      })
       .then((wildfireHistoryData) => {
         console.log("Wildfire history data:", wildfireHistoryData); // Debugging
-        const wildfireHistory = wildfireHistoryData.features?.length || "N/A"; // Example: Get the number of wildfires
+        const wildfireHistory = wildfireHistoryData.length || "N/A"; // Example: Get the number of wildfires
         return wildfireHistory;
       })
       .catch((error) => {
